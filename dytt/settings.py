@@ -27,7 +27,7 @@ ROBOTSTXT_OBEY = False
 # Configure a delay for requests for the same website (default: 0)
 # See http://scrapy.readthedocs.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 0.25
+# DOWNLOAD_DELAY = 0.25
 IMAGES_STORE = './pic'
 
 # The download delay setting will honor only one of:
@@ -65,9 +65,9 @@ DEFAULT_REQUEST_HEADERS = {'User-Agent': 'Mozilla/5.0 (X11; Linux'
 
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'dytt.pipelines.DyttPipeline': 300,
-#}
+ITEM_PIPELINES = {
+   'dytt.pipelines.DyttPipeline': 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html

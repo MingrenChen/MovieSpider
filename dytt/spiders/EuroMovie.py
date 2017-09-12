@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import urllib
-import re,os,sys
+import re, os, sys
 import scrapy
 import scrapy.selector
 import urllib.parse
@@ -19,18 +19,32 @@ class EuromovieSpider(scrapy.Spider):
         next_page = response.xpath("//div[@class=\"x\"]/td/a/@href").extract()[-2]
         if next_page:
             next_page_url = urllib.parse.urljoin('http://www.ygdy8.net/html/gndy/oumei/', next_page)
-            print(next_page_url)
             yield scrapy.Request(next_page_url, callback=self.parse)
 
     def parse_movie(self, response):
         item = items.DyttItem()
-        full_title = response.xpath("//*[@id=\"header\"]/div/div[3]/div[3]/div[2]/div[2]/div[1]/h1/font/text()").extract()[0]
-        item['name'] = re.search("《.*》", full_title).group(0)
-        item['time'] = full_title[:4]
         content = response.xpath("//*[@id=\"Zoom\"]/td").extract()[0].split("<br>")
-        item["category"] = content[8][6:].split("/")
-        item['rate'] = content[12]
+        item['url'] = response.url
+        for k in content:
+            if "译　　名" in k:
+                item['name'] = k[6:].split("/")[0]
+                break
+        if item['name'] == None:
+            for ak in content:
+                if "片　　名" in ak:
+                    item['name'] = ak[6:]
+                    break
+        for j in content:
+            if "年　　代" in j:
+                item['time'] = j[6:10]
+                break
+        for i in content:
+            if "类" in i:
+                item["category"] = i[6:]
+                break
+        try:
+            item['rate'] = response.xpath("//*[@id=\"Zoom\"]/td").re("IMDb.+\d.\d\/10","i")[0][-6:]
+        except:
+            item['rate'] = None
         item['link'] = response.xpath("//div[@id=\"Zoom\"]/td/table/tbody/tr/td/a/@href").extract()[0]
         yield item
-
-

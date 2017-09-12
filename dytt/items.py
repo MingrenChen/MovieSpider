@@ -16,3 +16,4 @@ class DyttItem(scrapy.Item):
     time = scrapy.Field()
     link = scrapy.Field()
     category = scrapy.Field()
+    pic = scrapy.Field()
